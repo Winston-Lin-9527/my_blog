@@ -21,9 +21,11 @@ const registerSchema = yup.object().shape({
   lastName: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
   password: yup.string().required("required"),
+  masterPassword: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  //picture: yup.string().required("required"),
+  picture: yup.string(),
 });
 
 const loginSchema = yup.object().shape({
@@ -36,6 +38,7 @@ const initialValuesRegister = {
   lastName: "",
   email: "",
   password: "",
+  masterPassword: "",
   location: "",
   occupation: "",
   picture: "",
@@ -62,6 +65,7 @@ const Form = () => {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
+    // formData.append("picturePath", "helloworld");
 
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
@@ -70,6 +74,7 @@ const Form = () => {
         body: formData,
       }
     );
+    console.log(savedUserResponse);
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
 
@@ -206,6 +211,17 @@ const Form = () => {
                     )}
                   </Dropzone>
                 </Box>
+                <TextField // todo master password for registration
+                    label="Master password*"
+                    type="password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.password}
+                    name="masterPassword"
+                    error={Boolean(touched.password) && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    sx={{ gridColumn: "span 4" }}
+                  />
               </>
             )}
 
@@ -236,7 +252,7 @@ const Form = () => {
           <Box>
             <Button
               fullWidth
-              type="submit"
+              type="submit" // this makes this button THE submitter
               sx={{
                 m: "2rem 0",
                 p: "1rem",

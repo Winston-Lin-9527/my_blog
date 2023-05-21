@@ -15,6 +15,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     });
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
+    console.log(data)
   };
 
   const getUserPosts = async () => {
@@ -40,13 +41,14 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   return (
     <>
       {posts.map(
-        ({
+        ({ // de-structure each post 
           _id,
           userId,
           firstName,
           lastName,
           description,
           location,
+          postDate,
           picturePath,
           userPicturePath,
           likes,
@@ -59,14 +61,15 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             name={`${firstName} ${lastName}`}
             description={description}
             location={location}
+            postDate={postDate}
             picturePath={picturePath}
             userPicturePath={userPicturePath}
             likes={likes}
             comments={comments}
           />
         )
-      )}
-    </>
+      ).reverse()}
+    </> // latest to earliest
   );
 };
 

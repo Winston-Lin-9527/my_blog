@@ -9,9 +9,9 @@ import UserImage from "./UserImage";
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { _id } = useSelector((state) => state.user);
+  const _id = useSelector((state) => state.user ? state.user._id : null);
   const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends);
+  const friends = useSelector((state) => state.user ? state.user.friends : null);
 
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
@@ -19,7 +19,10 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
-  const isFriend = friends.find((friend) => friend._id === friendId);
+  let isFriend = false; // by default we're at guest mode, so no friends
+  if(_id) {
+    isFriend = friends.find((friend) => friend._id === friendId);
+  }
 
   const patchFriend = async () => {
     const response = await fetch(
@@ -64,7 +67,8 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           </Typography>
         </Box>
       </FlexBetween>
-      <IconButton
+      
+      {token && (<IconButton
         onClick={() => patchFriend()}
         sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
       >
@@ -73,7 +77,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         ) : (
           <PersonAddOutlined sx={{ color: primaryDark }} />
         )}
-      </IconButton>
+      </IconButton>)}
     </FlexBetween>
   );
 };

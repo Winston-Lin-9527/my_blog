@@ -30,6 +30,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const isLogin = user !== null;
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -38,8 +39,8 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
-
-  const fullName = `${user.firstName} ${user.lastName}`;
+  
+  const fullName = isLogin ? `${user.firstName} ${user.lastName}` : `Guest`;
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -56,7 +57,7 @@ const Navbar = () => {
             },
           }}
         >
-          Sociopedia
+          Yet another blog 
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -107,7 +108,19 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              {isLogin ? (
+                  <MenuItem onClick={() => dispatch(setLogout())}>
+                    <Typography>Log Out</Typography>
+                  {/* <Typography>Log Out</Typography> */}
+                  </MenuItem>
+                  ) : (
+                  <MenuItem onClick={() => {
+                    navigate('/login');
+                    //navigate(0); // this refreshes the page 
+                  }}>
+                    <Typography>Log in</Typography>
+                  </MenuItem>
+                  )}
             </Select>
           </FormControl>
         </FlexBetween>
@@ -182,9 +195,16 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
+                {isLogin ? (
+                  <MenuItem onClick={() => dispatch(setLogout())}>
+                    <Typography>Log Out</Typography>
+                  {/* <Typography>Log Out</Typography> */}
+                  </MenuItem>
+                  ) : (
+                  <MenuItem onClick={() => dispatch(setLogout())}>
+                    <Typography>Log in</Typography>
+                  </MenuItem>
+                  )}
               </Select>
             </FormControl>
           </FlexBetween>
