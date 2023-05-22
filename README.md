@@ -1,2 +1,1 @@
 ## yet another blog
-
