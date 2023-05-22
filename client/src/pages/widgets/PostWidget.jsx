@@ -2,16 +2,16 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  ShareOutlined,
+  ShareOutlined
 } from "@mui/icons-material";
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { Button, Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { setPost, delPost } from "state";
 import ReactMarkdown from 'react-markdown';
 import { Editor, EditorState, convertToRaw, ContentState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
@@ -51,7 +51,7 @@ const PostWidget = ({
   }
 
   const patchLike = async () => {
-    const response = await fetch(process.env.REACT_APP_SERVER_URL+`/posts/${postId}/like`, {
+    const response = await fetch(process.env.REACT_APP_SERVER_URL + `/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -60,6 +60,7 @@ const PostWidget = ({
       body: JSON.stringify({ userId: loggedInUserId }),
     });
     const updatedPost = await response.json();
+    // console.log(updatedPost)
     dispatch(setPost({ post: updatedPost }));
   };
 
@@ -67,7 +68,7 @@ const PostWidget = ({
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     const updatedContent = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
     console.log(process.env.REACT_APP_SERVER_URL)
-    const response = await fetch(process.env.REACT_APP_SERVER_URL+`/posts/${postId}/edit`, {
+    const response = await fetch(process.env.REACT_APP_SERVER_URL + `/posts/${postId}/edit`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -82,6 +83,20 @@ const PostWidget = ({
       dispatch(setPost({ post: updatedPost }));
     }
   };
+
+  const deletePost = async () => {
+    const response = await fetch(process.env.REACT_APP_SERVER_URL + `/posts/${postId}/delete`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: loggedInUserId }),
+    });
+    const updatedPost = await response.json();
+    // console.log(updatedPost)
+    dispatch(delPost({ post: updatedPost }));
+  }
 
   return (
     <WidgetWrapper m="1rem 0">
@@ -105,8 +120,8 @@ const PostWidget = ({
         subtitle={location}
         userPicturePath={userPicturePath}
       />
-      <ReactMarkdown 
-        children={description} 
+      <ReactMarkdown
+        children={description}
         remarkPlugins={[remarkGfm]}
       />
       {picturePath && (
@@ -115,7 +130,7 @@ const PostWidget = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={process.env.REACT_APP_SERVER_URL+`/assets/${picturePath}`}
+          src={process.env.REACT_APP_SERVER_URL + `/assets/${picturePath}`}
         />
       )}
       <FlexBetween mt="0.25rem">
@@ -139,13 +154,20 @@ const PostWidget = ({
           </FlexBetween>
         </FlexBetween>
         {token && (
-          <IconButton onClick={() => {
-            setIsEdit(!isEdit);
-            setEditorState(EditorState.createWithContent(
-              ContentState.createFromText(description)));
-          }}>
-            <EditIcon />
-          </IconButton>
+          <FlexBetween gap="1rem">
+            <IconButton onClick={() => {
+              deletePost()
+            }}>
+              <DeleteIcon />
+            </IconButton>
+            <IconButton onClick={() => {
+              setIsEdit(!isEdit);
+              setEditorState(EditorState.createWithContent(
+                ContentState.createFromText(description)));
+            }}>
+              <EditIcon />
+            </IconButton>
+          </FlexBetween>
         )}
       </FlexBetween>
       {token && isEdit && (

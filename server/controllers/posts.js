@@ -77,7 +77,6 @@ export const editPost = async (req, res) => {
   try {
     const { id } = req.params;
     const { newContent } = req.body;
-    const post = await Post.findById(id);
 
     // post.description = newContent;
 
@@ -85,6 +84,23 @@ export const editPost = async (req, res) => {
       id,
       { description : newContent},
       { new: true}
+    );
+    console.log(updatedPost);
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newContent } = req.body;
+
+    // post.description = newContent;
+    const updatedPost = await Post.findByIdAndDelete(
+      id
     );
     console.log(updatedPost);
 
