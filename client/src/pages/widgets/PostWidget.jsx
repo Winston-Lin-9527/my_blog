@@ -51,7 +51,7 @@ const PostWidget = ({
   }
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+    const response = await fetch(process.env.REACT_APP_SERVER_URL+`/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -66,8 +66,8 @@ const PostWidget = ({
   const patchContent = async () => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     const updatedContent = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-    
-    const response = await fetch(`http://localhost:3001/posts/${postId}/edit`, {
+    console.log(process.env.REACT_APP_SERVER_URL)
+    const response = await fetch(process.env.REACT_APP_SERVER_URL+`/posts/${postId}/edit`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -115,7 +115,7 @@ const PostWidget = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={process.env.REACT_APP_SERVER_URL+`/assets/${picturePath}`}
         />
       )}
       <FlexBetween mt="0.25rem">

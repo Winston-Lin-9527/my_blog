@@ -16,6 +16,7 @@ import {
   Button,
   IconButton,
   useMediaQuery,
+  imageListItemBarClasses,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
@@ -47,7 +48,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const response = await fetch(`http://localhost:3001/posts`, {
+    const response = await fetch(process.env.REACT_APP_SERVER_URL+`/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -156,7 +157,7 @@ const MyPostWidget = ({ picturePath }) => {
         )}
 
         <Button
-          disabled={!post}
+          disabled={!post && !image}
           onClick={handlePost}
           sx={{
             color: palette.background.alt,
