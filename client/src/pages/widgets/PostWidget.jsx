@@ -24,7 +24,8 @@ const PostWidget = ({
   name,
   description,
   location,
-  postDate, // todo
+  createdAt,
+  updatedAt,
   picturePath,
   userPicturePath,
   likes,
@@ -109,11 +110,22 @@ const PostWidget = ({
             cursor: "pointer",
           },
         }}>
-        This is a example title
+        {description.split('\n')[0]}
       </Typography>
-      <Typography color={main} sx={{ mb: "1rem" }}>
-        {new Date(parseInt(postDate)).toDateString()}
-      </Typography>
+
+      <Box display="flex" justifyContent="flex-start">
+        <Typography color={main} sx={{ mb: "1rem", pr:"1rem"}}>
+          {"Created at: " + new Date(createdAt).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+          {/* {new Date(parseInt(postDate)).toDateString()} */}
+        </Typography>
+
+        {/* last updated date */}
+        <Typography color={main} sx={{ mb: "1rem" }}>
+          {"Updated at: " + new Date(updatedAt).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+          {/* {new Date(parseInt(postDate)).toDateString()} */}
+        </Typography>
+      </Box>
+
       <Friend
         friendId={postUserId}
         name={name}
@@ -176,12 +188,18 @@ const PostWidget = ({
             width="100%"
             height="auto"
             sx={{
-              borderRadius: "0.25rem",
-              padding: '0.5rem',
-              border: '0.1rem solid',
-              borderColor: palette.primary.main
+              // borderRadius: "0.25rem",
+              // padding: '0.5rem',
+              // border: '0.1rem solid',
+              // borderColor: palette.primary.main
+              width: "100%",
+              backgroundColor: palette.neutral.light,
+              borderRadius: "1rem",
+              padding: "1rem 2rem",
             }}>
-            <MyEditor />
+            <MyEditor
+              placeholder="wqdqw"
+            />
           </Box>
           <Box marginTop={'0.5rem'} display="flex" justifyContent="flex-end">
             <Button variant="contained" color="primary" onClick={() => patchContent()}>
