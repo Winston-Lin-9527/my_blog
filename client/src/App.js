@@ -23,13 +23,23 @@ function App() {
             <Route path="/" element={<GuestPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route
-              path="/home"
-              element={isAuth ? <HomePage /> : <Navigate to="/" />}
+              path="/admin"
+              element={isAuth ? <HomePage /> : <Navigate to="/404" />}
             />
             <Route
               path="/profile/:userId"
-              element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+              element={isAuth ? <ProfilePage /> : <Navigate to="/404" />}
             />
+            <Route
+              path="/404"
+              element={<>You don't have permission to access this page, login through homepage</>}
+            />
+            <Route
+              path="*"
+              // element={<Navigate to="/home" replace />} /> 
+              element={<>You seem to have wandered to a no man land.</>}
+            />
+              {/* `replace` replaces the current URL in history stack, so going back doesn't work */}
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

@@ -39,7 +39,7 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
-  
+
   const fullName = isLogin ? `${user.firstName} ${user.lastName}` : `Guest`;
 
   return (
@@ -57,7 +57,7 @@ const Navbar = () => {
             },
           }}
         >
-          Yet another blog 
+          Yet another blog
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -109,18 +109,21 @@ const Navbar = () => {
                 <Typography>{fullName}</Typography>
               </MenuItem>
               {isLogin ? (
-                  <MenuItem onClick={() => dispatch(setLogout())}>
-                    <Typography>Log Out</Typography>
+                <MenuItem onClick={() => {
+                  dispatch(setLogout());
+                  navigate('/');
+                }}>
+                  <Typography>Log Out</Typography>
                   {/* <Typography>Log Out</Typography> */}
-                  </MenuItem>
-                  ) : (
-                  <MenuItem onClick={() => {
-                    navigate('/login');
-                    //navigate(0); // this refreshes the page 
-                  }}>
-                    <Typography>Log in</Typography>
-                  </MenuItem>
-                  )}
+                </MenuItem>
+              ) : (
+                <MenuItem onClick={() => {
+                  navigate('/login');
+                  //navigate(0); // this refreshes the page 
+                }}>
+                  <Typography>Log in</Typography>
+                </MenuItem>
+              )}
             </Select>
           </FormControl>
         </FlexBetween>
@@ -198,13 +201,13 @@ const Navbar = () => {
                 {isLogin ? (
                   <MenuItem onClick={() => dispatch(setLogout())}>
                     <Typography>Log Out</Typography>
-                  {/* <Typography>Log Out</Typography> */}
+                    {/* <Typography>Log Out</Typography> */}
                   </MenuItem>
-                  ) : (
+                ) : (
                   <MenuItem onClick={() => dispatch(setLogout())}>
                     <Typography>Log in</Typography>
                   </MenuItem>
-                  )}
+                )}
               </Select>
             </FormControl>
           </FlexBetween>

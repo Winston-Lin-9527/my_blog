@@ -1,0 +1,23 @@
+.PopUp{
+    position: fixed;
+
+    left: 10%;
+    top: 10%;
+
+    width: 80%;
+    height: 80%;
+
+    border: 1px solid #011627;
+    border-radius: 1em;
+    /* box-shadow: -2px 5px 5px #E71D36; */
+
+    background-color: #FDFFFC;
+
+    /* display: flex; */
+    /* flex-direction: column;  */
+    /* by default it's row */
+    /* justify-content: space-between; */
+    /* align-items: center; */
+
+    color: #011627;
+}
