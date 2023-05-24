@@ -24,14 +24,14 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route
               path="/admin"
-              element={isAuth ? <HomePage /> : <Navigate to="/404" />}
+              element={isAuth ? <HomePage /> : <Navigate to="/invalid" />}
             />
             <Route
               path="/profile/:userId"
-              element={isAuth ? <ProfilePage /> : <Navigate to="/404" />}
+              element={isAuth ? <ProfilePage /> : <Navigate to="/invalid" />}
             />
             <Route
-              path="/404"
+              path="/invalid"
               element={<>You don't have permission to access this page, login through homepage</>}
             />
             <Route

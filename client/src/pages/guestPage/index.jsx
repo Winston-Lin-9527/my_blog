@@ -34,7 +34,7 @@ const GuestPage = () => {
           <IntroBanner
             name="Winston Lin"
             title="Student at UNSW"
-            description="This is my blog, i write something here from time to time"
+            description="Welcome to my blog, i write things on here from time to time. This is written in ReactJS and uses MERN."
           />
           {/* <MyPostWidget picturePath={picturePath} /> */}
           <Divider sx={{ margin: "1.25rem 0" }} />

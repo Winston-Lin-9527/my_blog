@@ -102,7 +102,7 @@ const PostWidget = ({
   return (
     <WidgetWrapper m="1rem 0">
       <Typography color={main}
-        variant="h2"
+        variant="h3"
         fontWeight="500"
         sx={{
           "&:hover": {
@@ -115,13 +115,13 @@ const PostWidget = ({
 
       <Box display="flex" justifyContent="flex-start">
         <Typography color={main} sx={{ mb: "1rem", pr:"1rem"}}>
-          {"Created at: " + new Date(createdAt).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+          {"Created at: " + new Date(createdAt).toLocaleString('en-GB', { second: 'numeric', minute: 'numeric', hour: 'numeric', day: 'numeric', month: 'long', year: 'numeric' })}
           {/* {new Date(parseInt(postDate)).toDateString()} */}
         </Typography>
 
         {/* last updated date */}
         <Typography color={main} sx={{ mb: "1rem" }}>
-          {"Updated at: " + new Date(updatedAt).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+          {"Updated at: " + new Date(updatedAt).toLocaleString('en-GB', { second: 'numeric', minute: 'numeric', hour: 'numeric', day: 'numeric', month: 'long', year: 'numeric' })}
           {/* {new Date(parseInt(postDate)).toDateString()} */}
         </Typography>
       </Box>

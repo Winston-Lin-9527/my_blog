@@ -9,6 +9,7 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  Tooltip,
 } from "@mui/material";
 import {
   Search,
@@ -19,6 +20,7 @@ import {
   Help,
   Menu,
   Close,
+  AdminPanelSettings,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -49,7 +51,7 @@ const Navbar = () => {
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)"
           color="primary"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/")}
           sx={{
             "&:hover": {
               color: primaryLight,
@@ -59,7 +61,7 @@ const Navbar = () => {
         >
           Yet another blog
         </Typography>
-        {isNonMobileScreens && (
+        {/* {isNonMobileScreens && (
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
@@ -71,22 +73,39 @@ const Navbar = () => {
               <Search />
             </IconButton>
           </FlexBetween>
-        )}
+        )} */}
       </FlexBetween>
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
-          <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === "dark" ? (
-              <DarkMode sx={{ fontSize: "25px" }} />
-            ) : (
-              <LightMode sx={{ color: dark, fontSize: "25px" }} />
-            )}
-          </IconButton>
+          <FlexBetween
+            backgroundColor={neutralLight}
+            borderRadius="9px"
+            gap="3rem"
+            padding="0.1rem 1.5rem"
+          >
+            <InputBase placeholder="Search..." />
+            <IconButton>
+              <Search />
+            </IconButton>
+          </FlexBetween>
+          <Tooltip title="Toggle darkmode">
+            <IconButton onClick={() => dispatch(setMode())}>
+              {theme.palette.mode === "dark" ? (
+                <DarkMode sx={{ fontSize: "25px" }} />
+              ) : (
+                <LightMode sx={{ color: dark, fontSize: "25px" }} />
+              )}
+            </IconButton>
+          </Tooltip>
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+          <Tooltip title="Admin Panel">
+            <IconButton onClick={() => navigate('/admin')}>
+              <AdminPanelSettings sx={{ fontSize: "25px" }} />
+            </IconButton>
+          </Tooltip>
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -176,7 +195,11 @@ const Navbar = () => {
             </IconButton>
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
+            <Tooltip title="Admin Panel">
+              <IconButton onClick={() => navigate('/admin')}>
+                <AdminPanelSettings sx={{ fontSize: "25px" }} />
+              </IconButton>
+            </Tooltip>
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}
