@@ -63,10 +63,14 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (currentSearch !== '')
+    if (currentSearch !== '') {
       getPostsWithSearch(currentSearch);
-    else
+      setPageNumber(Math.floor(posts.length / postsPerPage));
+    }
+    else {
       getPosts();
+      // setPageNumber(0);
+    }
   }, [currentSearch, getPosts, getPostsWithSearch])
 
   return (
