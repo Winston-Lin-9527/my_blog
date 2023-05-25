@@ -54,8 +54,8 @@ const MyPostWidget = ({ picturePath }) => {
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
-    const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    const postData = await response.json();
+    dispatch(setPosts({ posts: postData.reverse() }));
     setImage(null);
     setPost("");
   };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -33,6 +33,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const currentSearch = useSelector((state) => state.currentSearch);
+  const [tempSearch, setTempSearch] = useState(''); // uncommited search
   const isLogin = user !== null;
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
@@ -45,9 +46,26 @@ const Navbar = () => {
 
   const fullName = isLogin ? `${user.firstName} ${user.lastName}` : `Guest`;
 
+  useEffect(() => { // this thing eliminates the search query persistancy which bugs the app
+    let ignore = false; // 'This ensures your code doesn’t suffer from “race conditions”: network responses may arrive in a different order than you sent them.'
+    if (!ignore) {
+      dispatch(setCurrentSearch({ currentSearch: '' }));
+      console.log(`cleared: ${currentSearch}`);
+    }
+    // fetchBio(person).then(result => {
+    //   if (!ignore) {
+    //     setBio(result);
+    //   }
+    // });
+    return () => { // cleanup function
+      ignore = true;
+    };
+  }, []);
+
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
+        {`"${currentSearch}"`}
         <Typography
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)"
@@ -86,11 +104,14 @@ const Navbar = () => {
             gap="3rem"
             padding="0.1rem 1.5rem"
           >
-            <InputBase 
-              placeholder="Search..." 
+            <InputBase
+              placeholder="Search..."
               onChange={(event) => dispatch(setCurrentSearch({ currentSearch: event.target.value }))}
+            // onChange={(event) => setTempSearch(event.target.value)}
             />
-            <IconButton>
+            <IconButton
+            // onClick={() => dispatch(setCurrentSearch({ currentSearch: tempSearch }))}
+            >
               <Search />
             </IconButton>
           </FlexBetween>
@@ -160,85 +181,96 @@ const Navbar = () => {
 
       {/* MOBILE NAV */}
       {!isNonMobileScreens && isMobileMenuToggled && (
-        <Box
-          position="fixed"
-          right="0"
-          bottom="0"
-          height="100%"
-          zIndex="10"
-          maxWidth="500px"
-          minWidth="300px"
-          backgroundColor={background}
-        >
-          {/* CLOSE ICON */}
-          <Box display="flex" justifyContent="flex-end" p="1rem">
-            <IconButton
-              onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-            >
-              <Close />
-            </IconButton>
-          </Box>
-
-          {/* MENU ITEMS */}
-          <FlexBetween
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            gap="3rem"
+        <>
+          <Box
+            position="fixed"
+            right="0"
+            bottom="0"
+            height="100%"
+            zIndex="10"
+            maxWidth="500px"
+            minWidth="300px"
+            backgroundColor={background}
           >
-            <IconButton
-              onClick={() => dispatch(setMode())}
-              sx={{ fontSize: "25px" }}
-            >
-              {theme.palette.mode === "dark" ? (
-                <DarkMode sx={{ fontSize: "25px" }} />
-              ) : (
-                <LightMode sx={{ color: dark, fontSize: "25px" }} />
-              )}
-            </IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Tooltip title="Admin Panel">
-              <IconButton onClick={() => navigate('/admin')}>
-                <AdminPanelSettings sx={{ fontSize: "25px" }} />
-              </IconButton>
-            </Tooltip>
-            <FormControl variant="standard" value={fullName}>
-              <Select
-                value={fullName}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
+            <Box display="flex" justifyContent="flex-end" p="1rem">
+              <InputBase
+                placeholder="Search..."
+                // onChange={(event) => setTempSearch(event.target.value)}
+                onClick={() => dispatch(setCurrentSearch({ currentSearch: tempSearch }))}
+              />
+              <IconButton
+              // onClick={() => dispatch(setCurrentSearch({ currentSearch: tempSearch }))}
               >
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
-                {isLogin ? (
-                  <MenuItem onClick={() => dispatch(setLogout())}>
-                    <Typography>Log Out</Typography>
-                    {/* <Typography>Log Out</Typography> */}
-                  </MenuItem>
+                <Search />
+              </IconButton>
+              <IconButton
+                onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+              >
+                <Close />
+              </IconButton>
+            </Box>
+
+            {/* MENU ITEMS */}
+            <FlexBetween
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              gap="3rem"
+            >
+              <IconButton
+                onClick={() => dispatch(setMode())}
+                sx={{ fontSize: "25px" }}
+              >
+                {theme.palette.mode === "dark" ? (
+                  <DarkMode sx={{ fontSize: "25px" }} />
                 ) : (
-                  <MenuItem onClick={() => dispatch(setLogout())}>
-                    <Typography>Log in</Typography>
-                  </MenuItem>
+                  <LightMode sx={{ color: dark, fontSize: "25px" }} />
                 )}
-              </Select>
-            </FormControl>
-          </FlexBetween>
-        </Box>
+              </IconButton>
+              <Message sx={{ fontSize: "25px" }} />
+              <Notifications sx={{ fontSize: "25px" }} />
+              <Tooltip title="Admin Panel">
+                <IconButton onClick={() => navigate('/admin')}>
+                  <AdminPanelSettings sx={{ fontSize: "25px" }} />
+                </IconButton>
+              </Tooltip>
+              <FormControl variant="standard" value={fullName}>
+                <Select
+                  value={fullName}
+                  sx={{
+                    backgroundColor: neutralLight,
+                    width: "150px",
+                    borderRadius: "0.25rem",
+                    p: "0.25rem 1rem",
+                    "& .MuiSvgIcon-root": {
+                      pr: "0.25rem",
+                      width: "3rem",
+                    },
+                    "& .MuiSelect-select:focus": {
+                      backgroundColor: neutralLight,
+                    },
+                  }}
+                  input={<InputBase />}
+                >
+                  <MenuItem value={fullName}>
+                    <Typography>{fullName}</Typography>
+                  </MenuItem>
+                  {isLogin ? (
+                    <MenuItem onClick={() => dispatch(setLogout())}>
+                      <Typography>Log Out</Typography>
+                      {/* <Typography>Log Out</Typography> */}
+                    </MenuItem>
+                  ) : (
+                    <MenuItem onClick={() => dispatch(setLogout())}>
+                      <Typography>Log in</Typography>
+                    </MenuItem>
+                  )}
+                </Select>
+              </FormControl>
+            </FlexBetween>
+          </Box>
+        </>
       )}
     </FlexBetween>
   );

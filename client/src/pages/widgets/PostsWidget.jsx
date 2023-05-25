@@ -65,13 +65,14 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   useEffect(() => {
     if (currentSearch !== '') {
       getPostsWithSearch(currentSearch);
-      setPageNumber(Math.floor(posts.length / postsPerPage));
+      // setPageNumber(Math.floor(posts.length / postsPerPage));
+      // console.log(Math.floor(posts.length / postsPerPage));
     }
     else {
       getPosts();
-      // setPageNumber(0);
     }
-  }, [currentSearch, getPosts, getPostsWithSearch])
+    setPageNumber(0); // set to page 0 no matter what
+  }, [currentSearch])
 
   return (
     <>

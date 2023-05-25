@@ -1,6 +1,8 @@
 .PopUp{
     position: fixed;
 
+    z-index: 1;
+
     left: 10%;
     top: 10%;
 
