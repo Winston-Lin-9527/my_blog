@@ -23,7 +23,7 @@ import {
   AdminPanelSettings,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { setMode, setLogout } from "state";
+import { setMode, setLogout, setCurrentSearch } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 
@@ -32,6 +32,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const currentSearch = useSelector((state) => state.currentSearch);
   const isLogin = user !== null;
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
@@ -85,7 +86,10 @@ const Navbar = () => {
             gap="3rem"
             padding="0.1rem 1.5rem"
           >
-            <InputBase placeholder="Search..." />
+            <InputBase 
+              placeholder="Search..." 
+              onChange={(event) => dispatch(setCurrentSearch({ currentSearch: event.target.value }))}
+            />
             <IconButton>
               <Search />
             </IconButton>

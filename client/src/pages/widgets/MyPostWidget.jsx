@@ -34,6 +34,7 @@ const MyPostWidget = ({ picturePath }) => {
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
+  const currentSearch = useSelector((state) => state.currentSearch);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
@@ -48,7 +49,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const response = await fetch(process.env.REACT_APP_SERVER_URL+`/posts`, {
+    const response = await fetch(process.env.REACT_APP_SERVER_URL + `/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,

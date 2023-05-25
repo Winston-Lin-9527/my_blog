@@ -1,5 +1,5 @@
 import express from "express";
-import { deletePost, editPost, getFeedPosts, getUserPosts, likePost } from "../controllers/posts.js";
+import { deletePost, editPost, getFeedPosts, getUserPosts, likePost, searchPosts } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 // router.get("/", verifyToken, getFeedPosts); // don't need verification for getting the posts 
 router.get("/", getFeedPosts);
 router.get("/:userId/posts", getUserPosts);
+router.get("/search", searchPosts);
 
 /* UPDATE */
 router.patch("/:id/like", verifyToken, likePost);

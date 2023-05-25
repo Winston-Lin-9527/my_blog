@@ -24,11 +24,11 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route
               path="/admin"
-              element={isAuth ? <HomePage /> : <Navigate to="/invalid" />}
+              element={isAuth ? <HomePage /> : <Navigate to="/invalid" replace={true}/>} // don't know why replace needs to be true... documentation says don't need it
             />
             <Route
               path="/profile/:userId"
-              element={isAuth ? <ProfilePage /> : <Navigate to="/invalid" />}
+              element={isAuth ? <ProfilePage /> : <Navigate to="/invalid" replace={true}/>}
             />
             <Route
               path="/invalid"
