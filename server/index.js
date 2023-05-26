@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
+import mongoose, { isObjectIdOrHexString } from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
@@ -17,6 +17,13 @@ import { verifyToken } from "./middleware/auth.js";
 import User from "./models/User.js";
 import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js";
+
+import { Server } from 'socket.io';
+// (http, {
+//   cors: {
+//     origin: "*" // todo make 
+//   }
+// });
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -43,6 +50,43 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// socket io
+import http from 'http';
+
+const server = http.Server(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*" // Replace "*" with the appropriate origin URL
+  }
+});
+
+const MESSAGES_TO_KEEP=20; // the number of messages we're keeping on server, not persistant. 
+const messagesBuffer = [];
+
+io.on('connection', (socket) => {
+  console.log('A user connected.');
+  for (let i = 0; i < messagesBuffer.length; i++ ) {
+    io.to(socket.id).emit('message', messagesBuffer[i]);
+  }
+
+  // Handle incoming chat messages
+  socket.on('message', (message) => {
+    console.log('Received message:', message);
+    
+    io.emit('message', message); // Broadcast the message to all connected clients
+
+    if(messagesBuffer.length >= MESSAGES_TO_KEEP)
+      messagesBuffer.shift();
+    messagesBuffer.push(message);
+  });
+
+  // Handle disconnection
+  socket.on('disconnect', () => {
+    console.log('A user disconnected.');
+  });
+});
+
+
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
@@ -60,7 +104,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    server.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
     /* ADD DATA ONE TIME */
     // User.insertMany(users);

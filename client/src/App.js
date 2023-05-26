@@ -3,11 +3,25 @@ import HomePage from "pages/homePage";
 import LoginPage from "pages/loginPage";
 import GuestPage from 'pages/guestPage';
 import ProfilePage from "pages/profilePage";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+
+import { io } from "socket.io-client";
+
+// const socket = io(process.env.REACT_APP_SERVER_URL, {
+//   reconnectionDelayMax: 10000,
+//   // auth: {
+//   //   token: "123"
+//   // },
+//   // query: {
+//   //   "my-key": "my-value"
+//   // }
+// });
+
+// const socket = socketIO.connect(process.env.REACT_APP_SERVER_URL);
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -20,7 +34,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/" element={<GuestPage />} />
+            <Route path="/" element={<GuestPage/>} />
             <Route path="/login" element={<LoginPage />} />
             <Route
               path="/admin"
