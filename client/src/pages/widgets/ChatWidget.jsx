@@ -3,6 +3,7 @@ import { Box, Button, Grid, List, ListItem, ListItemText, TextField, Typography 
 import io from 'socket.io-client';
 import { useTheme } from '@emotion/react';
 import SendIcon from '@mui/icons-material/Send'
+import { useSelector } from 'react-redux';
 
 var socket = null;
 
@@ -11,6 +12,7 @@ function ChatWidget() {
   const [messageInput, setMessageInput] = useState('');
   const scrollRef = useRef(null);
   const theme = useTheme();
+  const isAuth = Boolean(useSelector((state) => state.token));
 
   useEffect(() => {
     socket = io(process.env.REACT_APP_SERVER_URL);
@@ -44,7 +46,12 @@ function ChatWidget() {
     if (messageInput.length > 0) {
       const date = new Date();
       // new Date(updatedAt).toLocaleString('en-GB', { second: 'numeric', minute: 'numeric', hour: 'numeric', day: 'numeric', month: 'long', year: 'numeric' })
-      socket.emit('message', `(${date.toLocaleString()}) Guest: ${messageInput}`);
+      socket.emit('message', {
+        text: `${messageInput}`,
+        sender: isAuth ? 'admin' : 'guest',
+        time: date.toLocaleString()
+      }
+      );
       setMessageInput('');
     }
   };
@@ -75,8 +82,8 @@ function ChatWidget() {
       >
         {messages.map((message, index) => (
           // <Paper elevation={9} style={{margin: '3px'}}>
-          <Typography key={index}>
-            {message}
+          <Typography key={index} color={message['sender'] === 'guest' ? 'black' : 'red'}>
+            {`(${message['time']}) ${message['sender']}: ${message['text']}`}
           </Typography>
           // {/* </Paper> */}
         ))}
