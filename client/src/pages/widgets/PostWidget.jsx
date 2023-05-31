@@ -82,6 +82,7 @@ const PostWidget = ({
     if (response.ok) {
       const updatedPost = await response.json();
       dispatch(setPost({ post: updatedPost }));
+      setIsEdit(false);
     }
   };
 
